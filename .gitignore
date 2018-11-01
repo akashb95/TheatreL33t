@@ -1,4 +1,6 @@
-./venv/
+venv/
 
-./db_creds.py
+db_creds.py
+
+.idea
 
