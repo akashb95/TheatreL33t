@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="initial-scale=1, width=device-width" name="viewport"/>
+
+    <!-- http://stewartjpark.com/Flask-JSGlue/ -->
+    {{ JSGlue.include() }}
+
+    <!-- Bundled CSS and JS - Bootstrap, jQuery, ChemDotOrg's native JS and CSS -->
+    <script src="{{ url_for('static', filename='bundle.js') }}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+
+    <title>
+        Chem.Org: {% block title %}{% endblock %}
+    </title>
+</head>
+
+<body>
+<div class="container-fluid">
+    <!-- Nav Bar -->
+    <div class="navbar">
+        <nav>
+            <a class="nav-item logo" href={{ url_for('index') }}>TheatreL33t</a>
+            <a class="nav-item" href={{ url_for('index') }}>Home</a>
+            {% if session.user_id %}
+                {% if session.admin %}
+                    <span>|</span><a class="nav-item" href={{ url_for("add_topics") }}>Add Film</a>
+                {% endif %}
+                <a class="nav-item right" href={{ url_for("logout") }}>Logout</a><span class="right">|</span>
+                <a class="nav-item right" href={{ url_for("unregister") }}>Unregister</a>
+            {% else %}
+                <a class="nav-item right" href={{ url_for("login") }}>Login</a><span class="right">|</span>
+                <a class="nav-item right" href={{ url_for("register") }}>Register</a>
+            {% endif %}
+        </nav>
+    </div>
+    <!-- End of Nav Bar -->
+
+    {% block main %}
+    {% endblock %}
+
+    <div class="footer">
+        <a class="nav-item" href={{ url_for("about") }}>About</a>
+    </div>
+</div>
+</body>
+
+{% block scripts %}
+{% endblock %}
+
+</html>
