@@ -1,0 +1,178 @@
+body {
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-family: Calibri;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 0;
+    font-family: 'Permanent Marker', cursive;
+}
+
+.logo {
+    font-family: 'Permanent Marker', cursive;
+    padding: 0 1vw 0 1vw;
+    font-weight: bolder;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    position: relative;
+}
+
+.container-fluid {
+    min-height: 100vh;
+    max-width: 100vw;
+}
+
+.container {
+    margin: 7.5vh 10vw 5vh 10vw;
+    text-align: center;
+}
+
+.navbar {
+    background-color: #0000af;
+}
+
+nav {
+    display: block;
+    padding: 2vh 0 2vh 0;
+}
+
+.nav-item {
+    text-align: center;
+    font-size: 105%;
+    color: #e5e5e5;
+    margin: 0;
+    padding: 0 1vw 0 1vw;
+    border-radius: 2px;
+    border-right-color: azure;
+    text-decoration: none;
+}
+
+.nav-item:hover {
+    font-weight: bolder;
+}
+
+.right {
+    float: right;
+}
+
+div.split {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+}
+
+div.form-group {
+    display: block;
+    text-align: left;
+}
+
+div.form-group-center {
+    text-align: center;
+}
+
+input {
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 25px;
+    min-width: 10vw;
+    border-radius: 6px;
+    margin: 8px 0 8px 0;
+}
+
+div.form-group input {
+    display: block;
+    min-width: 50vw;
+}
+
+textarea {
+    font-family: Calibri;
+    background-color: rgba(0, 0, 0, 0.1);
+    min-width: 50vw;
+    min-height: 30vh;
+    border-radius: 6px;
+
+}
+
+#q {
+    height: 35px;
+    min-width: 30vw;
+    margin: 0 2vw 0 0;
+}
+
+input.submit {
+    margin: 2vh 2vw 2vh 0;
+    min-width: 7vw;
+    max-width: 15vw;
+    height: 30px;
+    background-color: #0000af;
+    color: #e5e5e5;
+    border-radius: 6px;
+}
+
+.grid {
+    display: grid;
+    margin: 2vh 2vw 2vh 2vw;
+    padding: 1vh 1vw 1vh 1vw;
+    grid-auto-rows: 100px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 7px 7px;
+}
+
+.card{
+    width: 1fr;
+    display: grid;
+    grid-gap: 2px 2px;
+    border: 2px solid #0000af;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+}
+
+.icon {
+    width: 2fr;
+    height: 5fr;
+}
+
+.text {
+    width: 3fr;
+    height: 5fr;
+}
+
+.hidden {
+    display: none;
+}
+
+#extend-button-div {
+    text-align: center;
+}
+
+button#extend-button {
+    background-color: #0000af;
+    color: #e5e5e5;
+    min-height: 30px;
+    min-width: 130px;
+    border: 1px solid;
+    border-radius: 6px;
+    text-align: center;
+}
+
+button#extend-button:hover {
+    font-weight: bold;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding-top: 1.5vh;
+    padding-left: 5px;
+    min-width: 100vw;
+    background-color: #0000af;
+    min-height: 4vh;
+}
