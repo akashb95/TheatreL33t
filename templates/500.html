@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %} Internal Server Error! {% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>Error 500 @ TheatreL33t.Org</h1>
+        <h2>Whoops! Sorry, this is probably our bad, or maybe the website is too busy!</h2>
+        <h3>Go back <a href={{ url_for("index") }}>to home page?</a></h3>
+    </div>
+{% endblock %}
