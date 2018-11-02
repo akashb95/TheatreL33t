@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block main %}
+    <div class="container">
+
+        <div class="split">
+            <div class="register">
+
+                <form method="POST" action={{ url_for("register") }}>
+                    <label for="register-form"><strong>Register</strong></label>
+                    <br><br>
+                    <div class="form-group" id="register-form">
+                        <input type="text" aria-label="first name" placeholder="First Name"
+                               name="fname" id="fname"
+                               required/>
+
+                        <input type="text" aria-label="last name" placeholder="Last Name"
+                               name="lname" id="lname"
+                               required/>
+
+                        <input type="text" aria-label="username" placeholder="Username"
+                               name="username" id="username"
+                               required/>
+
+                        <input type="password" aria-label="password" placeholder="Password"
+                               name="password" id="password"
+                               required/>
+
+                        <input type="password" aria-label="repeat-password" placeholder="Repeat Password"
+                               name="repeat-password" id="repeat-password"
+                               required/>
+                        <input type="submit" class="submit" id="register" value="Register"/>
+                    </div>
+                </form>
+            </div>
+
+            {% include "errors-layout.html" with context %}
+
+        </div>
+    </div>
+{% endblock %}
