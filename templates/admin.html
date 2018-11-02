@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %} Staff Login {% endblock %}
+
+{% block main %}
+    <div class="container">
+
+        <div class="split">
+            <div class="login">
+
+                <form method="POST" action={{ url_for("admin") }}>
+                    <label for="login-form"><strong>Staff Login</strong></label>
+
+                    <div class="form-group" id="login-form">
+                        <input type="text" aria-label="username" placeholder="Username" name="username" id="username"
+                               required>
+
+                        <input type="password" aria-label="password" placeholder="Password" name="password"
+                               id="password"
+                               required>
+
+                        <input type="submit" class="submit" id="login" value="Login">
+                    </div>
+                </form>
+            </div>
+
+            {% include "errors-layout.html" with context %}
+
+        </div>
+    </div>
+{% endblock %}
