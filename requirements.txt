@@ -6,7 +6,7 @@ itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.0
 neo4j-driver==1.6.2
-neomodel==3.3.0
+neomodel==3.2.9
 neotime==1.0.0
 pytz==2018.7
 six==1.11.0
