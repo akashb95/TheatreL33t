@@ -1,2 +1,58 @@
 {% extends "layout.html" %}
 
+{% block title %}
+    {% if title %}
+        {{ title }}
+    {% else %}
+        Home
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% if query %}
+        &ldquo;{{ query }}&rdquo;
+    {% endif %}
+
+    {% include "errors-layout.html" with context %}
+
+    <div class="search">
+        <form method="GET" action={{ url_for("search") }}>
+            <div class="form-group-center">
+                <input type="search" class="form-control" name="q" id="q" placeholder="Browse..."
+                       aria-label="Browse Topics" value="{{ query }}" required>
+                <input type="submit" class="submit" id="submit" value="Go" aria-label="Browse"/>
+            </div>
+        </form>
+
+    </div>
+
+    {% if films %}
+        <div class="grid">
+            {% for film in films %}
+                <div class="card">
+                    <div class="icon">
+                        <img src={{ film.icon | safe }}>
+                    </div>
+
+                    <div class="text">
+                        <strong><span class="topic-title">{{ film.name | safe }}</span></strong>
+                        <br>
+                        <span class="topic-description">{{ film.description | safe }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id="extend-button-div">
+            <button id="extend-button">
+                Show More...
+            </button>
+        </div>
+
+    {% else %}
+        <div class="container">
+            <b>Sorry! No matching results found!</b>
+        </div>
+    {% endif %}
+
+{% endblock %}
