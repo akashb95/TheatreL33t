@@ -69,6 +69,12 @@ div.split {
     text-align: left;
 }
 
+.error {
+    text-align: left;
+    color: rgba(255, 0, 0, 0.59);
+    background-color: rgba(255, 0, 0, 0.07);
+}
+
 div.form-group {
     display: block;
     text-align: left;
@@ -88,22 +94,7 @@ input {
 
 div.form-group input {
     display: block;
-    min-width: 50vw;
-}
-
-textarea {
-    font-family: Calibri;
-    background-color: rgba(0, 0, 0, 0.1);
-    min-width: 50vw;
-    min-height: 30vh;
-    border-radius: 6px;
-
-}
-
-#q {
-    height: 35px;
     min-width: 30vw;
-    margin: 0 2vw 0 0;
 }
 
 input.submit {
@@ -116,6 +107,21 @@ input.submit {
     border-radius: 6px;
 }
 
+textarea {
+    font-family: Calibri;
+    background-color: rgba(0, 0, 0, 0.1);
+    min-width: 30vw;
+    min-height: 20vh;
+    border-radius: 6px;
+
+}
+
+#q {
+    height: 35px;
+    min-width: 30vw;
+    margin: 0 2vw 0 0;
+}
+
 .grid {
     display: grid;
     margin: 2vh 2vw 2vh 2vw;
@@ -125,7 +131,7 @@ input.submit {
     grid-gap: 7px 7px;
 }
 
-.card{
+.card {
     width: 1fr;
     display: grid;
     grid-gap: 2px 2px;
