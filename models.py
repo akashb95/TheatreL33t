@@ -1,4 +1,4 @@
-from neomodel import StructuredNode, StringProperty, UniqueIdProperty, DateTimeProperty, JSONProperty,\
+from neomodel import StructuredNode, StringProperty, UniqueIdProperty, DateTimeProperty, IntegerProperty,\
     ArrayProperty, StructuredRel, RelationshipTo, RelationshipFrom
 from datetime import datetime, timedelta
 import pytz
@@ -25,7 +25,7 @@ class ShowingIn(StructuredRel):
 
 class Staff(StructuredNode):
     uuid = UniqueIdProperty()
-    user = StringProperty(unique_index=True)
+    username = StringProperty(unique_index=True)
     password = StringProperty(required=True)
     f_name = StringProperty(required=True)
     l_name = StringProperty(required=True)
@@ -35,10 +35,11 @@ class Staff(StructuredNode):
 
 class Customer(StructuredNode):
     uuid = UniqueIdProperty()
-    email = StringProperty(unique_index=True)
+    username = StringProperty(unique_index=True)
     password = StringProperty(required=True)
     f_name = StringProperty(required=True)
     l_name = StringProperty(required=True)
+    email = StringProperty()
 
     booked = RelationshipTo("Movie", "BOOKED", model=Booked)
     cancelled = RelationshipTo("Movie", "CANCELLED", model=Cancelled)
@@ -56,7 +57,7 @@ class Movie(StructuredNode):
 class Hall(StructuredNode):
     uuid = UniqueIdProperty()
     name = StringProperty(unique_index=True)
-    seats = JSONProperty(required=True)
+    num_seats = IntegerProperty(required=True)
     reserved = ArrayProperty(required=True)
 
     showing = RelationshipFrom("Movie", "IN", model=ShowingIn)
