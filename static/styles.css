@@ -16,6 +16,16 @@ h1 {
     font-weight: bolder;
 }
 
+ol {
+    list-style: none;
+    padding: 0;
+}
+
+ol li {
+    position: relative;
+    padding: 0;
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -75,12 +85,19 @@ div.split {
     background-color: rgba(255, 0, 0, 0.07);
 }
 
+.notification {
+    text-align: left;
+    color: rgb(15, 100, 10);
+    background-color: rgba(0, 255, 0, 0.19);
+}
+
 div.form-group {
     display: block;
     text-align: left;
 }
 
 div.form-group-center {
+    padding: 3vh 2vw 0 2vw;
     text-align: center;
 }
 
@@ -148,6 +165,25 @@ textarea {
 .text {
     width: 3fr;
     height: 5fr;
+}
+
+.duration {
+    color: slategrey;
+}
+
+.shows {
+    padding: 0 0 3vh 0;
+    text-align: left;
+}
+
+.showing {
+    border: 2px solid #001175;
+    border-radius: 6px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 1vw;
+    padding-bottom: 10px;
 }
 
 .hidden {
