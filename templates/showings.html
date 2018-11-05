@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ film.title.title() }} Shows
+    {{ film.title }} Shows
 {% endblock %}
 
 {% block main %}
     <div class="container">
         <div class="title">
-            <big><strong>{{ film.title.title() }}</strong></big>
+            <big><strong>{{ film.title }}</strong></big>
             <span class="right duration"><small>{{ film.duration }} mins</small></span>
         </div>
 
@@ -18,7 +18,7 @@
                     <div class="showing">
                         <h4>{{ date }}</h4>
                         {% for show in shows %}
-                            <a href="../{{ film.title }}/book">{{ show.start }}</a>
+                            <a href="../{{ film.title }}/{{ show.uuid }}/book">{{ show.start }}</a>
                             <span class="right">Tickets available: {{ show.num_available }}</span> <br>
                         {% endfor %}
                     </div>
