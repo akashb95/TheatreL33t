@@ -30,10 +30,9 @@ def hash_password(password):
     return sha256(password.encode()).hexdigest()
 
 
-def parse_showtimes(times, hall_number, duration):
+def parse_showtimes(times, duration):
     """
 
-    :param hall_number: int
     :param times: str comma separated datetime strings
     :param duration: timedelta
     :return:
@@ -41,17 +40,13 @@ def parse_showtimes(times, hall_number, duration):
     times_array = times.split(",")
     showtimes_dt = []
 
+    # convert strings to datetime objects
     for dt in times_array:
         stripped = dt.strip()
         showtime = datetime.strptime(stripped, "%d/%m/%y %H:%M")
         showtimes_dt.append(showtime.replace(tzinfo=utc))
 
-    # check for collisions with pre-existing shows.
-    for showtime in showtimes_dt:
-        hall = Hall.nodes.get_or_none(name=hall_number)
-        if collides(hall, showtime, duration):
-            raise ValueError("Sorry, this film overlaps with another viewing!")
-
+    # ensure showings of this movie don't overlap
     for i in range(1, len(showtimes_dt)):
         # check if previous showtime for this movie overlaps with the start of the next viewing
         if showtimes_dt[i - 1] + duration > showtimes_dt[i]:
@@ -74,46 +69,39 @@ def collides(hall, dt, duration):
     collisions = hall.shows.filter(end__gt=dt, start__lt=dt+duration)
 
     if len(collisions) > 0:
-        return True
+        return collisions
 
     return False
 
 
-def hall_diagram(hall_number, reserved, row=10, column=12, draw=False):
+def hall_diagram(hall_number, reserved, row=10, column=12):
     """
 
     :param hall_number: int
     :param reserved: List of reserved seat indeces
     :param row: int
     :param column: int
-    :param draw: bool
     :return: str
     """
+    # check for hall diagram in cache
     diagram = hall_diagram.cache.get(hall_number)
 
     if not diagram:
         diagram = []
         for i in range(row):
-            diagram.append([" "] * column)
+            diagram.append([])
+            for j in range(column):
+                diagram[i].append(str((i * column) + j + 1))
 
+    # mark reserved seats with "R"
     for seat_number in reserved:
+        seat_number -= 1
         r = seat_number // column
         c = seat_number % column
         diagram[r][c] = "R"
 
+    # save to cache
     hall_diagram.cache[hall_number] = diagram
-
-    if draw:
-        divider = "\n|" + "---|" * column + "\n"
-        diagram_str = divider
-
-        for i in range(0, len(diagram)):
-            diagram_str += "|"
-            for j in range(0, len(diagram[i])):
-                diagram_str += "{:^3}|".format(diagram[i][j])
-            diagram_str += divider
-
-        return diagram, diagram_str
 
     return diagram
 
