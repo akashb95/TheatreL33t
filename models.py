@@ -11,16 +11,11 @@ class Added(StructuredRel):
 class Booked(StructuredRel):
     time = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
 
-    hall = StringProperty(required=True)
     seat = StringProperty(required=True)
 
 
 class Cancelled(StructuredRel):
     time = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
-
-
-# class ShowingIn(StructuredRel):
-#     hall = IntegerProperty(required=True)
 
 
 class Staff(StructuredNode):
@@ -51,8 +46,8 @@ class Customer(StructuredNode):
     l_name = StringProperty(required=True)
     email = StringProperty(default="")
 
-    booked = RelationshipTo("Movie", "BOOKED", model=Booked)
-    cancelled = RelationshipTo("Movie", "CANCELLED", model=Cancelled)
+    booked = RelationshipTo("Showing", "BOOKED", model=Booked)
+    cancelled = RelationshipTo("Showing", "CANCELLED", model=Cancelled)
 
     @property
     def serialize(self):
