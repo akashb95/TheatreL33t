@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="split">
+            <div class="change">
+                <form method="POST" action={{ url_for("profile") }}>
+                    <label for="register-form"><strong>Profile</strong></label>
+                    <br><br>
+                    <div class="form-group" id="register-form">
+                        <input type="text" aria-label="first name" value="{{ user.f_name }}"
+                               name="fname" id="fname"
+                               required/>
+
+                        <input type="text" aria-label="last name" value="{{ user.l_name }}"
+                               name="lname" id="lname"
+                               required/>
+
+                        <input type="email" aria-label="email" value="{{ user.email }}" placeholder="Email"
+                               name="email" id="email"
+                               required/>
+
+                        <input type="password" aria-label="old-password" placeholder="Old Password"
+                               name="old-password" id="old-password"
+                               required/>
+
+                        <input type="password" aria-label="new-password" placeholder="New Password"
+                               name="new-password" id="new-password"/>
+
+                        <input type="password" aria-label="repeat-password" placeholder="Repeat New Password"
+                               name="repeat-password" id="repeat-password"/>
+
+                        <input type="submit" class="submit" id="change" value="Update"/>
+                    </div>
+                </form>
+            </div>
+
+            {% include "errors-layout.html" with context %}
+        </div>
+    </div>
+{% endblock %}
