@@ -13,30 +13,30 @@
                     <div class="form-group">
                         <div class="split">
                             <div class="left">
-                            <input type="text" aria-label="add-film" name="film-name" id="film-name"
-                                   placeholder="Film Name"
-                                   required>
+                                <input type="text" aria-label="add-film" name="film-name" id="film-name"
+                                       placeholder="Film Name"
+                                       required>
 
-                            <textarea aria-label="add-film" form="add-film"
-                                      name="film-description"
-                                      id="film-description" wrap="soft"
-                                      placeholder="Film Description"
-                                      required></textarea>
+                                <textarea aria-label="add-film" form="add-film"
+                                          name="film-description"
+                                          id="film-description" wrap="soft"
+                                          placeholder="Film Description"
+                                          required></textarea>
                             </div>
 
                             <div class="right">
                                 <input type="number" id="film-hall" name="film-hall"
-                               placeholder="Hall number" step="1" min="1" required>
+                                       placeholder="Hall number" step="1" min="1" max="30" value="1" required>
 
-                        <input type="number" id="film-duration" name="film-duration"
-                               placeholder="Duration (hours)"
-                               step="0.5" required/>
+                                <input type="number" id="film-duration" name="film-duration"
+                                       placeholder="Duration (minutes)" value="60" min="1" max="480"
+                                       step="1" required/>
 
-                        <textarea aria-label="add-film" form="add-film"
-                                  name="film-times"
-                                  id="film-times" wrap="soft"
-                                  placeholder="Showing times"
-                                  required></textarea>
+                                <textarea aria-label="add-film" form="add-film"
+                                          name="film-times"
+                                          id="film-times" wrap="soft"
+                                          placeholder="Showing times. Please use comma separated format: dd/mm/yy hh:mm, dd/mm/yy hh:mm ..."
+                                          required></textarea>
                             </div>
 
                         </div>
