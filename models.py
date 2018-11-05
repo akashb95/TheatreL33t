@@ -1,6 +1,6 @@
 from neomodel import StructuredNode, StringProperty, UniqueIdProperty, DateTimeProperty, IntegerProperty,\
     ArrayProperty, StructuredRel, RelationshipTo, RelationshipFrom
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
 
 
@@ -19,8 +19,8 @@ class Cancelled(StructuredRel):
     time = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
 
 
-class ShowingIn(StructuredRel):
-    duration = DateTimeProperty(default=lambda: timedelta(hours=1))
+# class ShowingIn(StructuredRel):
+#     hall = IntegerProperty(required=True)
 
 
 class Staff(StructuredNode):
@@ -32,6 +32,16 @@ class Staff(StructuredNode):
 
     added = RelationshipTo("Movie", "ADDED", model=Added)
 
+    @property
+    def serialize(self):
+        result = {
+            "username": self.username,
+            "password": self.password,
+            "f_name": self.f_name,
+            "l_name": self.l_name
+        }
+        return result
+
 
 class Customer(StructuredNode):
     uuid = UniqueIdProperty()
@@ -39,25 +49,53 @@ class Customer(StructuredNode):
     password = StringProperty(required=True)
     f_name = StringProperty(required=True)
     l_name = StringProperty(required=True)
-    email = StringProperty()
+    email = StringProperty(default="")
 
     booked = RelationshipTo("Movie", "BOOKED", model=Booked)
     cancelled = RelationshipTo("Movie", "CANCELLED", model=Cancelled)
+
+    @property
+    def serialize(self):
+        result = {
+            "username": self.username,
+            "password": self.password,
+            "f_name": self.f_name,
+            "l_name": self.l_name,
+            "email": self.email
+        }
+        return result
 
 
 class Movie(StructuredNode):
     uuid = UniqueIdProperty()
     title = StringProperty(required=True)
     description = StringProperty(required=True)
-    duration = DateTimeProperty
+    duration = IntegerProperty(required=True)
 
-    location = RelationshipTo("Hall", "IN", model=ShowingIn)
+    showing = RelationshipTo("Showing", "SHOWING")
+
+
+class Showing(StructuredNode):
+    uuid = UniqueIdProperty()
+    start = DateTimeProperty(required=True)
+    end = DateTimeProperty(required=True)
+    reserved = ArrayProperty(default=[])
+    num_available = IntegerProperty(required=True)
+
+    location = RelationshipTo("Hall", "IN")
+
+    @property
+    def serialize(self):
+        return {"start": self.start, "end": self.end, "reserved": self.reserved, "num_available": self.num_available}
 
 
 class Hall(StructuredNode):
     uuid = UniqueIdProperty()
-    name = StringProperty(unique_index=True)
+    name = IntegerProperty(unique_index=True)
     num_seats = IntegerProperty(required=True)
-    reserved = ArrayProperty(required=True)
 
-    showing = RelationshipFrom("Movie", "IN", model=ShowingIn)
+    shows = RelationshipFrom("Showing", "IN")
+
+    @property
+    def serialize(self):
+        return {"name": self.name, "num_seats": self.num_seats}
