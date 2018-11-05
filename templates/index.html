@@ -10,7 +10,7 @@
 
 {% block main %}
     {% if query %}
-        &ldquo;{{ query }}&rdquo;
+        <h3>&ldquo;{{ query }}&rdquo; - Search Results</h3>
     {% endif %}
 
     {% include "errors-layout.html" with context %}
@@ -19,7 +19,7 @@
         <form method="GET" action={{ url_for("search") }}>
             <div class="form-group-center">
                 <input type="search" class="form-control" name="q" id="q" placeholder="Browse..."
-                       aria-label="Browse Topics" value="{{ query }}" required>
+                       aria-label="Browse Films" value="{{ query }}" required>
                 <input type="submit" class="submit" id="submit" value="Go" aria-label="Browse"/>
             </div>
         </form>
@@ -30,12 +30,16 @@
         <div class="grid">
             {% for film in films %}
                 <div class="card">
-                    <div class="icon">
-                        <img src={{ film.icon | safe }}>
-                    </div>
+                    <a href="/book/{{ film.title }}">
+                        <div class="icon">
+                            <img src={{ film.icon | safe }}>
+                        </div>
+                    </a>
 
                     <div class="text">
-                        <strong><span class="topic-title">{{ film.name | safe }}</span></strong>
+                        <strong><a href="/{{ film.title }}/showings">
+                            <span class="topic-title">{{ film.title | safe }}</span>
+                        </a></strong>
                         <br>
                         <span class="topic-description">{{ film.description | safe }}</span>
                     </div>
