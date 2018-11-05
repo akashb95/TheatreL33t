@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Book {{ film.title }} Tickets
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="title">
+            <big>
+                <strong>
+                    <a href="{{ url_for("showings", title=film.title) }}">
+                        {{ film.title }}</a>
+                    in Hall {{ hall.name }} @ {{ show.start }}
+                </strong></big>
+        </div>
+
+        <br><br>
+
+        <div class="diagram">
+            <table>
+                {% for row in diagram[0] %}
+                    <th> /</th>
+                {% endfor %}
+
+                {% for row in diagram %}
+                    <tr>
+                        {% for seat in row %}
+                            <td>{{ seat }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <br><br>
+
+        <form method="POST" id="add-film" action="book">
+            <label for="book-seat"><strong>Book Seat Number</strong></label><br>
+            <input type="number" aria-label="book-seat" name="book-seat" id="book-seat"
+                   placeholder="Seat Number" min="1" max="{{ maximum }}"
+                   required>
+            <input type="submit" class="submit" id="submit-booking" value="Book"/>
+        </form>
+    </div>
+{% endblock %}
