@@ -2,6 +2,7 @@ body {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.1);
     font-family: Calibri;
+    color: #00004a;
 }
 
 h1 {
@@ -185,6 +186,105 @@ textarea {
     padding-right: 1vw;
     padding-bottom: 10px;
 }
+
+div.confirmation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+table.confirmation {
+    width: max-content;
+    border-radius: 0.25em;
+    border-collapse: collapse;
+    margin: 1em;
+    background: rgba(189, 189, 189, 0.44);
+}
+
+td.confirmation {
+    margin: 0 auto;
+    text-align: left;
+}
+
+table.confirmation tr:hover {
+    background: #f1f1f1;
+}
+
+/* CSS for showing the history for a Customer */
+div.history {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+table.history {
+    width: 100%;
+    border-radius: 0.25em;
+    border-collapse: collapse;
+    margin: 1em;
+    background: rgba(189, 189, 189, 0.44);
+}
+
+table.history th {
+    border-bottom: 1px solid #364043;
+    color: #00004a;
+    font-weight: 600;
+    padding: 1vh 1vw 1vh 1vw;
+}
+
+table.history tbody tr:hover {
+    background: #f1f1f1;
+}
+
+table.history tr.cancelled {
+    color: #868686;
+}
+/* End Customer History CSS */
+
+tbody tr {
+    transition-property: background;
+    transition: all 0.35s ease;
+}
+
+tbody td {
+    margin: 1vh 1vw 1vh 1vw;
+    padding: 1vh 1vw 1vh 1vw;
+}
+
+/*Seat Map CSS*/
+div.diagram {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+table.diagram {
+    width: 100%;
+}
+
+tbody td.reserved {
+    border-radius: 6px;
+    background: #868686;
+}
+
+tbody td.available {
+    background: rgba(119, 255, 0, 0.31);
+}
+
+tbody td {
+    transition-property: border-radius, background;
+    transition: all 0.35s ease;
+}
+
+tbody td.available:hover {
+    background: #88988b;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+/*End Seat Map CSS*/
 
 .hidden {
     display: none;
