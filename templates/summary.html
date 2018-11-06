@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Booking Summary
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h3>Booking Summary</h3>
+        <div class="confirmation">
+            <table class="confirmation">
+                {% for heading, value in table.items() %}
+                    <tr>
+                        <th class="confirmation">{{ heading.title() }}</th>
+                        <td class="confirmation">{{ value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
