@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, session, flash
 from helpers import login_required, hash_password, parse_showtimes, collides, hall_diagram
-from lookup import lookup
+from lookup import lookup, user_history, lookup_by_date
 from datetime import datetime, timedelta
 from pytz import utc
 from flask_session import Session
@@ -36,7 +36,7 @@ def search(query=None):
         query = request.values.get("q")
 
     if query:
-        results = lookup(query)
+        results = lookup_by_date(query)
         title = "\"" + query + "\" - Search Results"
         return render_template("index.html", films=results, query=query, title=title)
 
@@ -386,29 +386,9 @@ def history():
 
     :return:
     """
-    user = Customer.nodes.get(uuid=session["user_id"])
-    items = []
 
-    for booking in user.booked.all():
-        rel = user.booked.relationship(booking)
-
-        expired = False
-        if booking.start <= datetime.now(utc):
-            expired = True
-
-        cancelled_time = ""
-        if rel.cancelled:
-            cancelled_time = rel.cancelled_time.strftime(format="%H:%M:%S")
-
-        items.append({"action_time": rel.time.strftime(format="%H:%M:%S"),
-                      "movie_name": booking.movie.all()[0].title,
-                      "seat": rel.seat,
-                      "start_time": booking.start.strftime(format="%a %d %b %H:%M"),
-                      "booking_uuid": booking.uuid,
-                      "cancelled": rel.cancelled,
-                      "cancelled_time": cancelled_time,
-                      "expired": expired})
-
+    username = session.get("username")
+    items = user_history(username)
     return render_template("history.html", history=items)
 
 
