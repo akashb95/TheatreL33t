@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, url_for, redirect, jsonify, session, flash
+from flask import Flask, render_template, request, url_for, redirect, session, flash
 from helpers import login_required, hash_password, parse_showtimes, collides, hall_diagram
 from lookup import lookup
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pytz import utc
 from flask_session import Session
 from flask_jsglue import JSGlue
-from neomodel import config, db
+from neomodel import config
 from db_creds import db_pass, db_user
 from tempfile import mkdtemp
 from models import Staff, Customer, Movie, Hall, Showing
@@ -150,7 +150,6 @@ def book(title, uuid):
     Ticket booking page
     :return:
     """
-
     # check if title exists
     movie = Movie.nodes.get_or_none(title=title)
     showing = Showing.nodes.get_or_none(uuid=uuid)
@@ -182,7 +181,16 @@ def book(title, uuid):
 
         user.booked.connect(showing, {"seat": seat_number})
 
-        render_template("index.html")
+        table = {
+            "name": " ".join([user.f_name, user.l_name]),
+            "movie": movie.title,
+            "hall": hall.name,
+            "seat": seat_number,
+            "time": showing.start.strftime(format="%a %d %b %y @ %H:%M"),
+            "duration": str(movie.duration) + " minutes"
+        }
+
+        return render_template("summary.html", table=table)
 
     rows = 10
     columns = hall.num_seats // 10
@@ -369,7 +377,58 @@ def profile():
 @login_required
 @app.route("/history", methods=["GET"])
 def history():
-    return render_template("history.html")
+    """
+
+    :return:
+    """
+    user = Customer.nodes.get(uuid=session["user_id"])
+    items = []
+
+    for booking in user.booked.all():
+        rel = user.booked.relationship(booking)
+
+        expired = False
+        if booking.start <= datetime.now(utc):
+            expired = True
+
+        cancelled_time = ""
+        if rel.cancelled:
+            cancelled_time = rel.cancelled_time.strftime(format="%H:%M:%S")
+
+        items.append({"action_time": rel.time.strftime(format="%H:%M:%S"),
+                      "movie_name": booking.movie.all()[0].title,
+                      "seat": rel.seat,
+                      "start_time": booking.start.strftime(format="%a %d %b %H:%M"),
+                      "booking_uuid": booking.uuid,
+                      "cancelled": rel.cancelled,
+                      "cancelled_time": cancelled_time,
+                      "expired": expired})
+
+    return render_template("history.html", history=items)
+
+
+@login_required
+@app.route("/cancel/<string:uuid>")
+def cancel(uuid):
+    """
+
+    :param uuid:
+    :return:
+    """
+    user = Customer.nodes.get(uuid=session["user_id"])
+    showing = Showing.nodes.get(uuid=uuid)
+    rel = user.booked.relationship(showing)
+
+    # seat is now free for other Customers to book
+    showing.reserved.remove(rel.seat)
+    showing.num_available += 1
+    showing.save()
+
+    # booking is cancelled
+    rel.cancelled = True
+    rel.cancelled_time = datetime.now(utc)
+    rel.save()
+    return redirect(url_for("history"))
 
 
 @app.route("/about", methods=["GET"])
