@@ -1,4 +1,4 @@
-from neomodel import StructuredNode, StringProperty, UniqueIdProperty, DateTimeProperty, IntegerProperty,\
+from neomodel import StructuredNode, StringProperty, UniqueIdProperty, DateTimeProperty, IntegerProperty, BooleanProperty,\
     ArrayProperty, StructuredRel, RelationshipTo, RelationshipFrom
 from datetime import datetime
 import pytz
@@ -10,12 +10,9 @@ class Added(StructuredRel):
 
 class Booked(StructuredRel):
     time = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
-
-    seat = StringProperty(required=True)
-
-
-class Cancelled(StructuredRel):
-    time = DateTimeProperty(default=lambda: datetime.now(pytz.utc))
+    cancelled = BooleanProperty(default=False)
+    cancelled_time = DateTimeProperty()
+    seat = IntegerProperty(required=True)
 
 
 class Staff(StructuredNode):
@@ -47,7 +44,6 @@ class Customer(StructuredNode):
     email = StringProperty(default="")
 
     booked = RelationshipTo("Showing", "BOOKED", model=Booked)
-    cancelled = RelationshipTo("Showing", "CANCELLED", model=Cancelled)
 
     @property
     def serialize(self):
@@ -78,6 +74,7 @@ class Showing(StructuredNode):
     num_available = IntegerProperty(required=True)
 
     location = RelationshipTo("Hall", "IN")
+    movie = RelationshipFrom("Movie", "SHOWING")
 
     @property
     def serialize(self):
