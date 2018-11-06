@@ -80,7 +80,7 @@ def add_film():
 
         # sanity check - ensure the entered showings don't collide with each other..
         try:
-            showtimes = parse_showtimes(film_times, hall_number, film_duration)
+            showtimes = parse_showtimes(film_times, film_duration)
         except ValueError as e:
             flash(f"{e}", "error")
             return render_template("add_film.html")
@@ -90,9 +90,14 @@ def add_film():
             hall = Hall.nodes.get_or_none(name=hall_number)
             collision = collides(hall, showtime, film_duration)
             if collision:
+                flash("Sorry, show at {showtime} collides with another!"
+                      .format(showtime=showtime.strftime(format="%d/%m/%y %H:%M")),
+                      "error")
                 for c in collision:
-                    print(c)
-                    raise ValueError(f"Sorry, the show at {showtime} overlaps with the above viewing(s)!")
+                    flash('{movie} at {time}'.format(movie=c.movie.all()[0].title,
+                                                     time=c.start.strftime(format="%H:%M")),
+                          "error")
+                return render_template("add_film.html")
 
         # find staff who is creating this.
         staff = Staff.nodes.get(uuid=added_by)
