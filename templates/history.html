@@ -5,5 +5,46 @@
 {% endblock %}
 
 {% block main %}
+    <div class="container">
+        <div class="history">
+            <table class="history">
+                <thead>
+                <tr>
+                    <th>Action Time</th>
+                    <th>Movie</th>
+                    <th>Reserved Seat</th>
+                    <th>Show Begins</th>
+                    <th>Cancelled</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for item in history %}
+                    {% if item.cancelled %}
+                    <tr class="cancelled">
+
+                    {% elif item.expired %}
+                    <tr class="expired">
+
+                    {% else %}
+                    <tr>
+                    {% endif %}
+                        <td>{{ item.action_time }}</td>
+                        <td>{{ item.movie_name }}</td>
+                        <td>{{ item.seat }}</td>
+                        <td>{{ item.start_time }}</td>
+                        <td>
+                            {% if not item.cancelled and not item.expired %}
+                                <a href="/cancel/{{ item.booking_uuid }}">Cancel</a>
+                            {% else %}
+                                {{ item.cancelled_time }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 {% endblock %}
