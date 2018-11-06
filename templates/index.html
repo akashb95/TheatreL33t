@@ -30,7 +30,7 @@
         <div class="grid">
             {% for film in films %}
                 <div class="card">
-                    <a href="/book/{{ film.title }}">
+                    <a href="/{{ film.title }}/showings">
                         <div class="icon">
                             <img src={{ film.icon | safe }}>
                         </div>
