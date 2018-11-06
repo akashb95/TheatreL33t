@@ -18,18 +18,26 @@
         <br><br>
 
         <div class="diagram">
-            <table>
+            <table class="diagram">
+                <thead>
                 {% for row in diagram[0] %}
-                    <th> /</th>
+                    <th>/</th>
                 {% endfor %}
+                </thead>
 
+                <tbody>
                 {% for row in diagram %}
                     <tr>
-                        {% for seat in row %}
-                            <td>{{ seat }}</td>
-                        {% endfor %}
+                    {% for seat in row %}
+                        {% if seat == "R" %}
+                            <td class="reserved">{{ seat }}</td>
+                        {% else %}
+                            <td class="available">{{ seat }}</td>
+                        {% endif %}
+                    {% endfor %}
                     </tr>
                 {% endfor %}
+                </tbody>
             </table>
         </div>
 
