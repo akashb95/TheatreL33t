@@ -35,7 +35,7 @@
                         <td>{{ item.start_time }}</td>
                         <td>
                             {% if not item.cancelled and not item.expired %}
-                                <a href="/cancel/{{ item.booking_uuid }}">Cancel</a>
+                                <a href="/cancel/{{ item.booking_uuid }}/{{ item.seat }}">Cancel</a>
                             {% else %}
                                 {{ item.cancelled_time }}
                             {% endif %}
