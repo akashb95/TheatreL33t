@@ -9,6 +9,7 @@
         <div class="title">
             <big>
                 <strong>
+                    {% if not session.admin %} Choose Seats for {% endif %}
                     <a href="{{ url_for("showings", title=film.title) }}">
                         {{ film.title }}</a>
                     in Hall {{ hall.name }} @ {{ show.start }}
@@ -16,6 +17,8 @@
         </div>
 
         <br><br>
+
+        {% include "errors-layout.html" with context %}
 
         <div class="diagram">
             <table class="diagram">
@@ -28,13 +31,13 @@
                 <tbody>
                 {% for row in diagram %}
                     <tr>
-                    {% for seat in row %}
-                        {% if seat == "R" %}
-                            <td class="reserved">{{ seat }}</td>
-                        {% else %}
-                            <td class="available">{{ seat }}</td>
-                        {% endif %}
-                    {% endfor %}
+                        {% for seat in row %}
+                            {% if seat == "R" %}
+                                <td class="reserved">{{ seat }}</td>
+                            {% else %}
+                                <td class="available">{{ seat }}</td>
+                            {% endif %}
+                        {% endfor %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -43,12 +46,14 @@
 
         <br><br>
 
-        <form method="POST" id="add-film" action="book">
-            <label for="book-seat"><strong>Book Seat Number</strong></label><br>
-            <input type="number" aria-label="book-seat" name="book-seat" id="book-seat"
-                   placeholder="Seat Number" min="1" max="{{ maximum }}"
-                   required>
-            <input type="submit" class="submit" id="submit-booking" value="Book"/>
-        </form>
+        {% if not session.admin %}
+            <form method="POST" id="add-film" action="book">
+                <label for="book-seat"><strong>Book Seat Number</strong></label><br>
+                <input type="number" aria-label="book-seat" name="book-seat" id="book-seat"
+                       placeholder="Seat Number" min="1" max="{{ maximum }}"
+                       required>
+                <input type="submit" class="submit" id="submit-booking" value="Book"/>
+            </form>
+        {% endif %}
     </div>
 {% endblock %}
