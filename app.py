@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect, session, flash
 from helpers import login_required, hash_password, parse_showtimes, collides, hall_diagram
-from lookup import lookup, user_history, lookup_by_date
+from lookup import lookup, user_history, lookup_by_date, cancel_booking, recommends
 from datetime import datetime, timedelta
 from pytz import utc
 from flask_session import Session
@@ -8,7 +8,7 @@ from flask_jsglue import JSGlue
 from neomodel import config
 from db_creds import db_pass, db_user
 from tempfile import mkdtemp
-from models import Staff, Customer, Movie, Hall, Showing
+from models import Staff, Customer, Movie, Hall, Showing, Added
 
 # Flask initialisation
 app = Flask(__name__)
@@ -43,8 +43,8 @@ def search(query=None):
     return redirect(url_for('index'))
 
 
-@login_required
 @app.route("/add", methods=["GET", "POST"])
+@login_required
 def add_film():
     if request.method == "POST":
         # sanity check
@@ -108,7 +108,8 @@ def add_film():
             # create movie node
             movie = Movie(title=film_name, description=film_desc, duration=film_duration_minutes).save()
 
-        staff.added.connect(movie)
+        if not staff.added.is_connected(movie):
+            staff.added.connect(movie)
 
         for showtime in showtimes:
             # create and save node for this showing
@@ -122,6 +123,9 @@ def add_film():
 
             movie.refresh()
             showing.refresh()
+
+            # clear search cache
+            lookup.cache = {}
 
     return render_template("add_film.html")
 
@@ -145,11 +149,15 @@ def showings(title):
                                     "reserved": showing.reserved,
                                     "num_available": showing.num_available})
 
-    return render_template("showings.html", film=movie, available=available)
+    recommendations = recommends(title)
+    if len(recommendations) == 0:
+        recommendations = None
+
+    return render_template("showings.html", film=movie, available=available, recommendations=recommendations)
 
 
-@login_required
 @app.route("/<string:title>/<string:uuid>/book", methods=["GET", "POST"])
+@login_required
 def book(title, uuid):
     """
     Ticket booking page
@@ -171,12 +179,12 @@ def book(title, uuid):
             seat_number = int(seat_number)
 
         except ValueError:
-            flash("Please enter valid seat number!")
+            flash("Please enter valid seat number!", "error")
             return redirect(url_for(f"/{title}/{uuid}/book.html"))
 
         if seat_number in showing.reserved:
-            flash(f"Sorry, seat {seat_number} is already reserved!")
-            return redirect(url_for(f"/{title}/{uuid}/book.html"))
+            flash(f"Sorry, seat {seat_number} is already reserved!", "error")
+            return redirect(url_for("book", title=title, uuid=uuid))
 
         showing.reserved.append(seat_number)
         showing.num_available -= 1
@@ -195,10 +203,16 @@ def book(title, uuid):
             "duration": str(movie.duration) + " minutes"
         }
 
-        return render_template("summary.html", table=table)
+        hall_diagram.cache = {}
+
+        recommendations = recommends(title)
+        if len(recommendations) == 0:
+            recommendations = None
+
+        return render_template("summary.html", table=table, uuid=showing.uuid, recommendations=recommendations)
 
     rows = 10
-    columns = hall.num_seats // 10
+    columns = hall.num_seats // rows
     diagram = hall_diagram(hall.name, showing.reserved, row=rows, column=columns)
 
     show = {"uuid": showing.uuid,
@@ -329,14 +343,14 @@ def logout():
     return redirect((url_for("index")))
 
 
-@login_required
 @app.route("/unregister", methods=["GET", "POST"])
+@login_required
 def unregister():
     return render_template("404.html")
 
 
-@login_required
 @app.route("/profile", methods=["GET", "POST"])
+@login_required
 def profile():
     """
     Allows customer to change their details. Needs password.
@@ -379,8 +393,8 @@ def profile():
     return render_template("profile.html", user=user)
 
 
-@login_required
 @app.route("/history", methods=["GET"])
+@login_required
 def history():
     """
 
@@ -392,28 +406,53 @@ def history():
     return render_template("history.html", history=items)
 
 
+@app.route("/cancel/<string:uuid>/<int:seat>")
 @login_required
-@app.route("/cancel/<string:uuid>")
-def cancel(uuid):
+def cancel(uuid, seat):
     """
 
     :param uuid:
+    :param seat:
     :return:
     """
     user = Customer.nodes.get(uuid=session["user_id"])
     showing = Showing.nodes.get(uuid=uuid)
-    rel = user.booked.relationship(showing)
 
     # seat is now free for other Customers to book
-    showing.reserved.remove(rel.seat)
+    showing.reserved.remove(seat)
     showing.num_available += 1
-    showing.save()
 
-    # booking is cancelled
-    rel.cancelled = True
-    rel.cancelled_time = datetime.now(utc)
-    rel.save()
+    # change relationship details
+    cancel_booking(showing.uuid, user.uuid, int(seat))
+
+    showing.save()
+    hall_diagram.cache = {}
+
     return redirect(url_for("history"))
+
+
+@app.route("/export")
+@login_required
+def export():
+    if not session.get("admin"):
+        flash("403. Insufficient privileges to complete this action.", "error")
+        return redirect(url_for("index"))
+
+    exports = []
+
+    movies = Movie.nodes.order_by("title").all()
+    for movie in movies:
+        title = movie.title
+        shows = movie.showing.all()
+        for show in shows:
+            details = dict()
+            details["title"] = title
+            details["start"] = show.start.strftime(format="%d/%m/%y,%H:%M")
+            details["num_available"] = show.num_available
+            details["num_reserved"] = len(show.reserved)
+            exports.append(details)
+
+    return render_template("exports.html", exports=exports)
 
 
 @app.route("/about", methods=["GET"])
