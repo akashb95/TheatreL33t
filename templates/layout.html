@@ -26,6 +26,7 @@
             {% if session.user_id %}
                 {% if session.admin %}
                     <span>|</span><a class="nav-item left" href={{ url_for("add_film") }}>Add Film</a>
+                    <span>|</span><a class="nav-item left" href={{ url_for("export") }}>Export</a>
                 {% else %}
                     <span>|</span><a class="nav-item left " href={{ url_for("profile") }}>Profile</a>
                     <span>|</span><a class="nav-item left" href={{ url_for("history") }}>History</a>
