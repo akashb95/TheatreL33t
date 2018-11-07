@@ -131,7 +131,11 @@ textarea {
     min-width: 30vw;
     min-height: 20vh;
     border-radius: 6px;
+}
 
+textarea#exports {
+    width: 100%;
+    min-height: 70vh;
 }
 
 #q {
@@ -187,6 +191,7 @@ textarea {
     padding-bottom: 10px;
 }
 
+/* Confirmation table CSS */
 div.confirmation {
     display: flex;
     justify-content: center;
@@ -209,6 +214,8 @@ td.confirmation {
 table.confirmation tr:hover {
     background: #f1f1f1;
 }
+
+/* End of confirmation table CSS */
 
 /* CSS for showing the history for a Customer */
 div.history {
@@ -269,11 +276,8 @@ tbody td.reserved {
     background: #868686;
 }
 
-tbody td.available {
-    background: rgba(119, 255, 0, 0.31);
-}
-
 tbody td {
+    background: rgba(119, 255, 0, 0.31);
     transition-property: border-radius, background;
     transition: all 0.35s ease;
 }
@@ -288,24 +292,6 @@ tbody td.available:hover {
 
 .hidden {
     display: none;
-}
-
-#extend-button-div {
-    text-align: center;
-}
-
-button#extend-button {
-    background-color: #0000af;
-    color: #e5e5e5;
-    min-height: 30px;
-    min-width: 130px;
-    border: 1px solid;
-    border-radius: 6px;
-    text-align: center;
-}
-
-button#extend-button:hover {
-    font-weight: bold;
 }
 
 .footer {
