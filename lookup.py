@@ -93,14 +93,15 @@ def user_history(username):
         booking_details = r[0]._properties
 
         action_time = datetime.fromtimestamp(booking_details["time"], tz=utc)
-        action_time = action_time.strftime(format="%H:%M:%S")
+        action_time = action_time.strftime(format="%d/%m/%y @ %H:%M:%S")
 
         start_time = datetime.fromtimestamp(show_details["start"])
         start_time = start_time.strftime(format="%a %d %b %H:%M")
 
         cancelled_time = ""
         if booking_details["cancelled"]:
-            cancelled_time = booking_details["cancelled_time"]
+            cancelled_time = datetime.fromtimestamp(booking_details["cancelled_time"], tz=utc)\
+                .strftime(format="%d/%m/%y @ %H:%M:%S")
 
         expired = False
         if datetime.fromtimestamp(show_details["start"], tz=utc) < datetime.now(utc):
@@ -120,3 +121,35 @@ def user_history(username):
     return items
 
 
+def cancel_booking(s_uuid, c_uuid, seat):
+    """
+
+    :param s_uuid: str Showing uuid
+    :param c_uuid: str Customer uuid
+    :param seat: int
+    :return:
+    """
+    now = datetime.now(tz=utc).timestamp()
+    command = """
+                MATCH (c:Customer)-[r:BOOKED]-(s:Showing) 
+                WHERE (s.uuid='{uuid}' AND c.uuid='{c}' AND r.seat={seat})
+                SET r.cancelled=true, r.cancelled_time={now}
+                RETURN r
+                """.format(uuid=s_uuid, c=c_uuid, now=now, seat=seat)
+
+    booking, meta = db.cypher_query(command)
+
+    return booking
+
+
+def recommends(movie_title, limit=10):
+    command = """MATCH (m:Movie)-[:SHOWING]->(:Showing)<-[:BOOKED]-(:Customer)
+                        -[popularity:BOOKED]->(:Showing)<-[:SHOWING]-(n:Movie) 
+                 WHERE (m.title="{title}" AND NOT (m.title=n.title)) 
+                 RETURN n, COUNT(popularity) AS p  
+                 ORDER BY p DESC
+                 LIMIT {limit}""".format(title=movie_title, limit=limit)
+
+    movies, meta = db.cypher_query(command)
+    movies = [Movie.inflate(row[0]) for row in movies]  # List of Movie Nodes
+    return movies
