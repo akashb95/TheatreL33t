@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Exports
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h3>CSV Exports</h3>
+
+<textarea name="exports" class="exports" id="exports" aria-label="exports" wrap="soft"
+placeholder="CSV Exports">{% for line in exports %}{{ line.title }},{{ line.start }},{{ line.num_reserved }},{{ line.num_available }}
+{% endfor %}</textarea>
+    </div>
+
+
+{% endblock %}
