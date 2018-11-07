@@ -11,20 +11,39 @@
             <span class="right duration"><small>{{ film.duration }} mins</small></span>
         </div>
 
+        <div class="description">
+            {{ film.description }}
+        </div>
+
         <div class="shows">
             <ol>
                 {% for date, shows in available.items() %}
-                <li>
-                    <div class="showing">
-                        <h4>{{ date }}</h4>
-                        {% for show in shows %}
-                            <a href="../{{ film.title }}/{{ show.uuid }}/book">{{ show.start }}</a>
-                            <span class="right">Tickets available: {{ show.num_available }}</span> <br>
-                        {% endfor %}
-                    </div>
-                </li>
+                    <li>
+                        <div class="showing">
+                            <h4>{{ date }}</h4>
+                            {% for show in shows %}
+                                <a href="../{{ film.title }}/{{ show.uuid }}/book">{{ show.start }}</a>
+                                <span class="right">Tickets available: {{ show.num_available }}</span> <br>
+                            {% endfor %}
+                        </div>
+                    </li>
                 {% endfor %}
             </ol>
         </div>
+
+        {% if recommendations %}
+            <div class="recommends">
+                <br>
+                <h4>Customers who liked this also liked:</h4>
+                <ol>
+                    {% for movie in recommendations %}
+                        <li>
+                            <a href="{{ url_for("showings", title=movie.title) }}">{{ movie.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <br><br>
+        {% endif %}
     </div>
 {% endblock %}

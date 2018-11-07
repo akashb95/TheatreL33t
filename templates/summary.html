@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+    {% include "errors-layout.html" with context %}
     <div class="container">
         <h3>Booking Summary</h3>
         <div class="confirmation">
@@ -17,6 +18,22 @@
                 {% endfor %}
             </table>
         </div>
+
+        <a href="{{ url_for("book", title=table.movie, uuid=uuid) }}"><< Back to booking</a>
+
+        {% if recommendations %}
+            <br>
+            <div class="recommendations">
+                <h4>Customers who liked this also liked:</h4>
+                <ol>
+                    {% for movie in recommendations %}
+                        <li>
+                            <a href="{{ url_for("showings", title=movie.title) }}">{{ movie.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        {% endif %}
 
     </div>
 {% endblock %}
