@@ -3,18 +3,17 @@ from flask import session, redirect, url_for, request
 from hashlib import sha256
 from datetime import datetime
 from pytz import utc
-from models import Hall
 
 
 def login_required(f):
     """
     Decorate routes to require login.
-    http://flask.pocoo.org/docs/0.11/patterns/viewdecorators/
+    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
     """
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
+        if not session.get("user_id"):
             return redirect(url_for("login", next=request.url))
         return f(*args, **kwargs)
 
@@ -66,7 +65,7 @@ def collides(hall, dt, duration):
 
     # check if new film starts before another ends, and whether new film ends after another ends.
     # If true, this is a collision
-    collisions = hall.shows.filter(end__gt=dt, start__lt=dt+duration)
+    collisions = hall.shows.filter(end__gt=dt, start__lt=dt + duration)
 
     if len(collisions) > 0:
         return collisions
