@@ -21,7 +21,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Connecting to neo4j database.
-config.DATABASE_URL = "bolt://{username}:{password}@localhost:7687".format(username=db_user, password=db_pass)
+config.DATABASE_URL = "bolt://{username}:{password}@localhost:11001".format(username=db_user, password=db_pass)
 
 
 @app.route('/')
