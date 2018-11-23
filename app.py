@@ -21,7 +21,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Connecting to neo4j database.
-config.DATABASE_URL = "bolt://{username}:{password}@35.234.129.165:11001".format(username=db_user, password=db_pass)
+config.DATABASE_URL = "bolt://{username}:{password}@localhost:11001".format(username=db_user, password=db_pass)
 
 
 @app.route('/')
@@ -124,8 +124,8 @@ def add_film():
             movie.refresh()
             showing.refresh()
 
-            # clear search cache
-            lookup.cache = {}
+        # clear search cache
+        lookup.cache = {}
 
     return render_template("add_film.html")
 
