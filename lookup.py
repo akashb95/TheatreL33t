@@ -27,7 +27,7 @@ def lookup(query, order_by=None):
     movies, meta = db.cypher_query(cypher_command)
 
     movies = [Movie.inflate(row[0]) for row in movies]  # List of Movie Nodes
-    lookup.cache[query] = movies
+    # lookup.cache[query] = movies
 
     return movies
 
@@ -65,7 +65,7 @@ def lookup_by_date(query, order_by=None):
     movies = [Movie.inflate(row[0]) for row in movies]  # List of Movie Nodes
 
     # update cache
-    lookup.cache[query] = movies
+    # lookup.cache[query] = movies
     return movies
 
 
