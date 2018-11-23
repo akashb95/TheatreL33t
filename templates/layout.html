@@ -32,9 +32,9 @@
                     <span>|</span><a class="nav-item left" href={{ url_for("history") }}>History</a>
                 {% endif %}
                 <a class="nav-item right" href={{ url_for("logout") }}>Logout</a><span class="right">|</span>
-                {% if session.admin == False %}
-                    <a class="nav-item right" href={{ url_for("unregister") }}>Unregister</a>
-                {% endif %}
+{#                {% if session.admin == False %}#}
+{#                    <a class="nav-item right" href={{ url_for("unregister") }}>Unregister</a>#}
+{#                {% endif %}#}
             {% else %}
                 <a class="nav-item right" href={{ url_for("login") }}>Login</a><span class="right">|</span>
                 <a class="nav-item right" href={{ url_for("register") }}>Register</a>
