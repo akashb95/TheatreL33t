@@ -21,7 +21,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Connecting to neo4j database.
-config.DATABASE_URL = "bolt://{username}:{password}@localhost:11001".format(username=db_user, password=db_pass)
+config.DATABASE_URL = "bolt://{username}:{password}@35.234.129.165:11001".format(username=db_user, password=db_pass)
 
 
 @app.route('/')
@@ -82,7 +82,7 @@ def add_film():
         try:
             showtimes = parse_showtimes(film_times, film_duration)
         except ValueError as e:
-            flash(f"{e}", "error")
+            flash("{e}".format(e=e), "error")
             return render_template("add_film.html")
 
         # check for collisions with pre-existing shows.
@@ -180,10 +180,10 @@ def book(title, uuid):
 
         except ValueError:
             flash("Please enter valid seat number!", "error")
-            return redirect(url_for(f"/{title}/{uuid}/book.html"))
+            return redirect(url_for("/{title}/{uuid}/book.html".format(title=title, uuid=uuid)))
 
         if seat_number in showing.reserved:
-            flash(f"Sorry, seat {seat_number} is already reserved!", "error")
+            flash("Sorry, seat {seat_number} is already reserved!".format(seat_number=seat_number), "error")
             return redirect(url_for("book", title=title, uuid=uuid))
 
         showing.reserved.append(seat_number)
