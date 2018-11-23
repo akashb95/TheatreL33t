@@ -5,8 +5,8 @@ from pytz import utc
 
 
 def lookup(query, order_by=None):
-    if query in lookup.cache:
-        return lookup.cache[query]
+    # if query in lookup.cache:
+    #     return lookup.cache[query]
 
     # Cypher command to match query string that starts with given string, ignoring case.
     cypher_command = """
@@ -37,8 +37,8 @@ lookup.cache = {}
 
 def lookup_by_date(query, order_by=None):
     # check cache first
-    if query in lookup.cache:
-        return lookup.cache[query]
+    # if query in lookup.cache:
+    #     return lookup.cache[query]
 
     try:
         dt_start = datetime.strptime(query, "%d/%m/%y").replace(tzinfo=utc)
