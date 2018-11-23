@@ -16,19 +16,23 @@
         </div>
 
         <div class="shows">
-            <ol>
-                {% for date, shows in available.items() %}
-                    <li>
-                        <div class="showing">
-                            <h4>{{ date }}</h4>
-                            {% for show in shows %}
-                                <a href="../{{ film.title }}/{{ show.uuid }}/book">{{ show.start }}</a>
-                                <span class="right">Tickets available: {{ show.num_available }}</span> <br>
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% endfor %}
-            </ol>
+            {% if available %}
+                <ol>
+                    {% for date, shows in available.items() %}
+                        <li>
+                            <div class="showing">
+                                <h4>{{ date }}</h4>
+                                {% for show in shows %}
+                                    <a href="../{{ film.title }}/{{ show.uuid }}/book">{{ show.start }}</a>
+                                    <span class="right">Tickets available: {{ show.num_available }}</span> <br>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% else %}
+                <b>Sorry, no showings available at this time!</b>
+            {% endif %}
         </div>
 
         {% if recommendations %}
